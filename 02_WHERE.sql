@@ -105,7 +105,6 @@ WHERE job = 'SALESMAN' OR hiredate >= TO_DATE('1981/06/01', 'YYYY/MM/DD');
 
 
 where 12]
-논리연산 (AND, OR 실습 WHERE12)
 - emp 테이블에서 job이 SALESMAN이거나 사원번호가 78로 시작하는
 직원의 정보를 다음과 같이 조회하세요.
 
