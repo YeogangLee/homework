@@ -1,0 +1,12 @@
+1.
+int[] array;
+array = new int[5];
+
+2. 
+array = new int[]{1, 2, 3, 4, 5};
+
+3.
+int[] array = {1, 2, 3, 4, 5};
+
+
+==> int[] counts = new int[10];
