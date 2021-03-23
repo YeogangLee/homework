@@ -114,7 +114,8 @@ SELECT  MAX(sal), MIN(sal), ROUND(AVG(sal), 2), SUM(sal), COUNT(sal), COUNT(mgr)
 FROM emp;
 
 
-grp2]
+grp2] 아마 부서별 ...
+
 SELECT  deptno, MAX(sal), MIN(sal), ROUND(AVG(sal), 2), SUM(sal), COUNT(sal), COUNT(mgr), COUNT(*)
 FROM emp
 GROUP BY deptno;
