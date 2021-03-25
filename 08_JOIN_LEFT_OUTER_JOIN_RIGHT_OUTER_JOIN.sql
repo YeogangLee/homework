@@ -23,7 +23,7 @@ WHERE b.buyer_id = p.prod_buyer;
 데이터 결합 실습 join3]
 - erd 다이어그램을 참고하여 member, cart, prod 테이블을 조인하여
 회원별 장바구니에 담은 제품 정보를 다음과 같은 결과가 나오는 쿼리를 작성해보세요.
-(핵심: 테이블 3개 조인, 초심자에게는 oracle 표기가 더 편할 것)
+(핵심** 테이블 3개 조인, 초심자에게는 oracle 표기가 더 편할 것)
 
 SELECT mem_id, mem_name, prod_id, prod_name, cart_qty
 FROM member, cart, prod
