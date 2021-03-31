@@ -1,0 +1,15 @@
+접근제어자 : public, protected, private, (default)
+사용이유 : 1. 데이터 보호 2. 불필요한 멤버 숨기기
+
+추상 메서드, 추상 클래스 abstract와 오버라이딩@Override 
+추상 메서드는 블럭이 없다 -> 내용이 없다
+ex.  abstract void abstractMethod();
+
+인터페이스interface : 여러 부모로부터 다중 상속이 가능
+예약어 : implements
+ex.  class 클래스명 implements 부모1, 부모2{}
+
+인터페이스 : 새로운 관계를 만들 때 사용
+스타크래프트 SCV는 Unit의 Marine은 수리 불가능
+Tank, Dropship 둘만의 새로운 관계를 인터페이스로 정의
+인터페이스 내용이 없어도 상관 없음
