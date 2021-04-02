@@ -17,7 +17,7 @@ WHERE userid IN ('brown', 'cony', 'sally');
 SELECT userid 아이디, usernm 이름, alias 별명
 FROM users
 WHERE userid IN ('brown', 'cony', 'sally');
--- WHERE userid 'brown' OR userid 'cony' OR userid 'sally'
+-- WHERE userid = 'brown' OR userid = 'cony' OR userid = 'sally'
 
 
 where 4]
