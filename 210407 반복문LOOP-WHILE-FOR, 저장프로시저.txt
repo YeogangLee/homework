@@ -1,0 +1,30 @@
+- 01 반복문 : LOOP 문, WHILE 문, FOR 문
+- LOOP 나가기 : EXIT WHEN 조건;
+- 커서에 사용하는 FOR 문
+- FOR 문을 사용하는 경우, 커서의 OPEN, FETCH, CLOSE 문은 생략
+
+- 02 저장 프로시저
+- FUNCTION vs PROCEDURE
+함수는 SELECT 문, WHERE 절처럼 값을 반환
+프로시저는 결과가 없기 때문에, SELECT 문 WHERE 절에 사용 불가
+-> 독립적으로 실행되며 로직을 가지고 있다
+
+- 테이블 생성 방법
+CREATE TABLE 테이블명(
+	REMAIN_YEAR  CHAR(4),
+    	PROD_ID      VARCHAR2(10),
+    	REMAIN_J_00  NUMBER(5) DEFAULT 0,
+	REMAIN_DATE  DATE,
+	CONSTRAINT pk_remain PRIMARY KEY(remain_year, prod_id),
+	CONSTRAINT fk_remain_prod FOREIGN KEY(prod_id) REFERENCES prod(prod_id)  
+);
+- 테이블에서 다른 테이블로 자료 삽입
+INSERT INTO 테이블명(컬럼명n개)
+SELECT 데이터n개
+FROM 테이블명2;
+
+
+문제 - 1)LOOP문 구구단, LOOP문 피보나치 수
+       2)WHILE문 저축금액
+         LOOP문 + CURSOR [+WHILE문] 이용 -> member 테이블 컬럼값 구하기
+       3)FOR문 구구단, LOOP문 + FOR문 [+인라인커서] 이용 -> 테이블 컬럼값 구하기

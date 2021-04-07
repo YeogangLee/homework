@@ -1,0 +1,25 @@
+#HashMap
+인덱스X, 키O
+키 이름으로 자료형 추측 가능
+
+- Object put(Object key, Object value) : 지정된 키와 값을 저장한다.
+- Object remove(Object key) : 지정된 키로 저장된 값을 제거한다.
+- Object get(Object key) : 지정된 키의 값(없으면 null)을 반환한다.
+- Set keySet() : 저장된 모든 키를 Set자료형으로 반환한다.
+
+- 해쉬맵 하나로 테이블의 한 행 저장 가능
+테이블은 다수의 행 
+-> ArrayList에 여러 개의 HashMap을 저장, 그러면 테이블 표현 가능
+=>
+HashMap<String, Object> row = new HashMap<>();
+ArrayList<HashMap<String, Object>> table = new ArrayList<>();
+
+
+- 향상된 for문을 이용해 Set에서 값 꺼내기 가능
+for(String key : keys){//향상된 for문
+	System.out.println(key + " : " + map.get(key));
+	/*
+	 * : 의 오른쪽에는 여러 데이터를 저장할 수 있는 형태의 데이터가 온다
+	 * : 의 왼쪽에는 변수가 오는데, 변수의 자료형은 저장된 값 중 하나
+	 */
+}
