@@ -1,0 +1,213 @@
+1. 테이블 컬럼명 변경
+TEMP 테이블의 ABC를 QAZ라는 컬럼명으로 변경
+
+ALTER TABLE TEMP
+    RENAME COLUMN ABC TO QAZ;
+
+
+2. 테이블 컬럼의 자료형 변경
+TEMP 테이블의 ABC 컬럼을 NUMBER(10)으로 변경하는 경우
+
+ALTER TABLE TEMP
+    MODIFY ABC NUMBER(10);
+    -- 해당 컬럼의 내용을 모두 지워야 변경 가능   
+
+
+3. 프로시저 / 테이블을 UPDATE 하는 프로시저
+
+-- 여기서 시작
+CREATE PROCEDURE PROC_REMAIN_IN( IN/OUT매개변수 )
+IS -- 지역변수
+BEGIN -- SELECT 일반 SQL 쿼리문
+END;
+
+1. 2005년 상품별 매입수량 집계 -- 프로시저 밖에서 처리
+   -- SELECT 문 필요
+2. 1의 결과 각 행을 PROCEDURE 에 전달
+   -- CURSOR 필요
+3. PROCEDURE 에서 재고 수불테이블 UPDATE
+
+
+(생성)
+CREATE OR REPLACE PROCEDURE PROC_REMAIN_IN(
+    P_CODE PROD.PROD_ID%TYPE, 
+    P_CNT IN NUMBER)
+IS -- 지역변수, 쓸 게 없을 때는 비워두기
+BEGIN
+    UPDATE REMAIN
+       SET (REMAIN_I, REMAIN_J_99, REMAIN_DATE) 
+         = (SELECT REMAIN_I + P_CNT, REMAIN_J_99 + P_CNT, TO_DATE('2005/01/31', 'YYYY/MM/DD')
+              FROM REMAIN
+             WHERE REMAIN_YEAR = '2005'
+               AND PROD_ID = P_CODE) -- 서브쿼리라서 SELECT, FROM, WHERE 명시
+        -- 현재 REMAIN_I가 가지고 있는 값(기존 재고) + P_CNT (새로 들어오는 상품)
+     WHERE REMAIN_YEAR = '2005'
+       AND PROD_ID = P_CODE;
+END;
+
+(실행 명령)
+EXEC|EXECUTE 프로시저명[(매개변수 LIST)];
+(단, 지금은 'EXEC|EXECUTE'는 생략
+-> 익명블록 등 또다른 프로시저나 함수에서 프로시저 호출시 반드시 생략)
+
+(일반 SQL)
+- 2005년 상품별 매입집계
+
+SELECT BUY_PROD BCODE,
+          SUM(BUY_QTY) BAMT
+  FROM BUYPROD
+ WHERE BUY_DATE BETWEEN TO_DATE('2005/01/01', 'YYYY/MM/DD') AND TO_DATE('2005/01/31', 'YYYY/MM/DD')
+ GROUP BY BUY_PROD;
+
+(익명블록)
+DECLARE
+    CURSOR CUR_BUY_AMT 
+    IS
+    SELECT BUY_PROD BCODE, SUM(BUY_QTY) BAMT
+      FROM BUYPROD
+     WHERE BUY_DATE BETWEEN TO_DATE('2005/01/01', 'YYYY/MM/DD') AND TO_DATE('2005/01/31', 'YYYY/MM/DD')
+     GROUP BY BUY_PROD;
+BEGIN
+-- 이전에 만들었던 프로시저 호출
+    FOR REC01 IN CUR_BUY_AMT LOOP
+        PROC_REMAIN_IN(REC01.BCODE, REC01.BAMT); -- 커서가 행을 읽어오기 때문에, 테이블명(커서이름.컬럼명)
+        -- (상품코드, 매입수량) -> (BCODE, BAMT) -> (REC01.BCODE, REC01.BAMT)
+    END LOOP;
+END; 
+
+
+
+4. 프로시저 / 데이터를 입력받고, 그에 해당하는 데이터 반환
+회원아이디를 입력 받아 그 회원의 이름, 주소와 직업을 반환하는 프로시저를 작성하시오.
+
+-- 매개변수가 몇 개 필요? 4개 필요 -> 입력용/1.회원아이디, 출력용/2.이름,3.주소,4.직업
+
+1. 프로시저명 : PROC_MEM_INFO
+2. 매개변수 
+: 입력용 - 회원아이디
+  출력용 - 이름, 주소, 직업
+
+(생성)
+CREATE OR REPLACE PROCEDURE PROC_MEM_INFO (
+    P_ID MEMBER.MEM_ID%TYPE,
+    P_NAME OUT MEMBER.MEM_NAME%TYPE,
+    P_ADDR OUT VARCHAR2, 
+    P_JOB OUT MEMBER.MEM_JOB%TYPE)
+AS
+BEGIN
+    SELECT MEM_NAME, MEM_ADD1||' '||MEM_ADD2, MEM_JOB
+      INTO P_NAME, P_ADDR, P_JOB
+      FROM MEMBER
+     WHERE MEM_ID = P_ID;
+END;
+
+
+(실행) // 앞에는 실행, 일반 SQL, 익명블럭 이었는데 여기서는 바로 실행
+ACCEPT PID PROMPT '회원아이디 : '
+DECLARE
+    V_NAME MEMBER.MEM_NAME%TYPE;
+    V_ADDR VARCHAR2(200); -- 여기는 익명블럭, 프로시저에서는 크기XX
+    V_JOB MEMBER.MEM_JOB%TYPE;
+BEGIN
+    PROC_MEM_INFO(LOWER('&PID'), V_NAME, V_ADDR, V_JOB);
+    DBMS_OUTPUT.PUT_LINE('회원아이디 :'||'&PID'); -- 출력할 때도, 입력받을 때처럼
+    DBMS_OUTPUT.PUT_LINE('회원 이름 : '||V_NAME);
+    DBMS_OUTPUT.PUT_LINE('회원 주소 : '||V_ADDR);
+    DBMS_OUTPUT.PUT_LINE('회원 직업 : '||V_JOB);
+END;
+
+
+
+5. 프로시저 / 해당 년도에 구매를 가장 많이한 회원이름과 구매액 반환
+
+년도를 입력 받아 해당 년도에 구매를 가장 많이한 회원이름과 구매액을
+반환하는 프로시저를 작성하시오
+
+1. 프로시저명 : PROC_MEM_PTOP
+2. 매개변수 : 입력용 - 년도
+                 출력용 - 회원명, 구매액
+
+(일반 SQL)
+- 2005년 회원별 구매금액
+필요한 컬럼 : 회원명 또는 회원아이디
+
+- 회원별 구매금액 조회
+SELECT C.CART_MEMBER,
+       SUM(C.CART_QTY * P.PROD_PRICE) "회원별 구매금액"
+  FROM CART C, PROD P
+ WHERE C.CART_PROD = P.PROD_ID
+ GROUP BY C.CART_MEMBER
+ ORDER BY 2 DESC;
+
+-- 서브쿼리, 순위니까 ROWNUM 이용
+SELECT M.MEM_NAME, A.AMT 
+    -- 이름은 MEMBER 테이블에 있다
+  FROM (SELECT C.CART_MEMBER AS MID,
+               SUM(C.CART_QTY * P.PROD_PRICE) AS AMT
+          FROM CART C, PROD P
+         WHERE C.CART_PROD = P.PROD_ID
+           AND SUBSTR(C.CART_NO, 1, 4) = '2005'
+         GROUP BY C.CART_MEMBER
+         ORDER BY 2 DESC) A, MEMBER M
+WHERE M.MEM_ID = A.MID -- 이름 가지고 오고 싶어서 JOIN
+  AND ROWNUM = 1; -- ROWNUM 을 바깥에 이용
+
+
+(생성)
+CREATE OR REPLACE PROCEDURE PROC_MEM_PTOP(
+    P_YEAR IN CHAR,
+    P_NAME OUT MEMBER.MEM_NAME%TYPE,
+    P_AMT OUT NUMBER)
+AS
+BEGIN
+SELECT M.MEM_NAME, A.AMT
+  INTO P_NAME, P_AMT
+  FROM (SELECT C.CART_MEMBER AS MID,
+               SUM(C.CART_QTY * P.PROD_PRICE) AS AMT
+          FROM CART C, PROD P
+         WHERE C.CART_PROD = P.PROD_ID
+           AND SUBSTR(C.CART_NO, 1, 4) = P_YEAR
+         GROUP BY C.CART_MEMBER
+         ORDER BY 2 DESC) A, MEMBER M
+WHERE M.MEM_ID = A.MID 
+  AND ROWNUM = 1;
+END;
+
+
+(실행)
+DECLARE
+    V_NAME MEMBER.MEM_NAME%TYPE; -- 매개변수가 아니니 ; 붙여줘라
+    V_AMT NUMBER := 0;
+BEGIN
+    -- EXEC, EXECUTE 반드시 생략 -> 익명블록 내부에서 호출했으므로
+    PROC_MEM_PTOP('2005', V_NAME, V_AMT);
+    DBMS_OUTPUT.PUT_LINE('회원이름 : '||V_NAME);
+    DBMS_OUTPUT.PUT_LINE('구매금액 : '||TO_CHAR(V_AMT, '99,999,999'));
+END;
+
+
+
+6. 프로시저 / 조건에 해당하는 컬럼의 데이터 수정
+2005년도 구매금액이 없는 회원을 찾아 회원테이블(MEMBER)의
+삭제여부 컬럼(MEM_DELETE)의 값을 'Y'로 변경하는 프로시저 작성
+
+1. 구매금액이 없는 회원을 찾는다 - 회원번호 필요
+2. 여러명일 경우 CURSOR 이용 - 커서에서 회원번호 생성
+3. 커서에서 읽은 값을 MEMBER 테이블과 비교
+4. 그 행들을 Y로 업데이트
+
+-- https://yamalab.tistory.com/7
+-- 주문하지 않은 고객의 이름
+select name
+from customer cs
+where cs.custid not in (select od.custid
+                               from orders od)
+
+1.구매금액이 없는 회원
+SELECT mem_id
+  FROM member
+ WHERE member.mem_id not in (select cart_member 
+			       from cart);
+
+
+

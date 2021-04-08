@@ -1,0 +1,69 @@
+1. 조건이 있는 정보 조회 
+사원 테이블에서 부모 부서 코드가 90번 부서에 속한 사원정보를 조회하시오.
+조회할 데이터 : 사원번호, 사원명, 부서명, 급여
+
+SELECT 회원번호, 회원명, 직업, 마일리지
+FROM 회원
+WHERE 마일리지 >= 3000;
+
+
+
+2. 조건이 있는 정보 조회2
+회원 테이블에서 마일리지가 3000 이상인 회원의 회원번호, 회원명, 직업, 마일리지를 조회하시오.
+
+SELECT mem_id, mem_name, mem_job, mem_mileage
+FROM member
+WHERE mem_mileage >= 3000
+ORDER BY mem_mileage;
+
+
+
+3. 테이블 컬럼값 변경
+MEMBER 테이블에서 신용환의 마일리지를 10000으로 변경
+
+UPDATE MEMBER
+   SET MEM_MILEAGE = 10000 -- 변경할 컬럼명
+ WHERE MEM_NAME = '신용환';
+
+
+
+4. 뷰 컬럼값 변경
+뷰 V_MEMBER01에서 신용환의 마일리지를 500으로 변경
+
+UPDATE V_MEMBER01
+   SET MEM_MILEAGE = 500 -- 마일리지 = 500
+ WHERE MEM_NAME = '신용환';
+
+
+
+5. 조건을 만족하는 테이블 컬럼을 이용한 뷰 생성
+HR계정의 사원테이블(employees)에서 50번 부서에 속한 사원 중 급여가 5000 이상인 사원번호, 사원명, 입사일, 급여를
+읽기 전용 뷰로 생성하시오. (뷰 이름은 v_emp_sal01, 컬럼명은 원본 테이블의 컬럼명 사용)
+뷰가 생성된 후, 뷰와 테이블을 이용해 해당 사원의 사원번호, 사원명, 직무명, 급여를 출력하는 SQL 작성
+
+CREATE OR REPLACE VIEW v_emp_sal01
+AS 
+    SELECT *
+    FROM employees
+    WHERE employees.department_id = 50
+    AND employees.salary >= 5000
+    WITH READ ONLY;
+    
+SELECT employee_id, emp_name, job_id, salary
+FROM v_emp_sal01;
+
+SELECT 사원번호, 사원명, 직무명, 급여
+  FROM employees a, jobs b, v_emp_sal01 c
+->;
+SELECT c.employee_id AS 사원번호, 
+       c.emp_name AS 사원명, 
+       b.job_id AS 직무명, 
+       c.salary AS 급여
+  FROM employees a, jobs b, v_emp_sal01 c
+ WHERE a.employee_id = c.employee_id
+   AND a.job_id = b.job_id;
+-- 5개의 커서
+
+
+
+

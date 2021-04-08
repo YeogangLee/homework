@@ -1,0 +1,70 @@
+- 시퀀스 생성
+CREATE SEQUENCE SEQ_LPROD
+ START WITH 10;
+
+- 생성 후 값 조회
+SELECT SEQ_LPROD.CURRVAL
+ FROM dual;
+
+- 시퀀스를 이용한 자료 행 삽입
+INSERT INTO LPROD VALUES(SEQ_LPROD.NEXTVAL, 'P501', '농산물');
+
+- 행 삭제
+DELETE LPROD 
+WHERE LPROD_NM = '농산물'; 
+
+- 시퀀스 삭제
+DROP SEQUENCE SEQ_LPROD;
+
+- 객체 삭제
+DROP 객체타입 객체명;
+
+
+
+1. 시퀀스를 이용하여 테이블에 자료 삽입
+오늘이 2005년 7월 28일인 경우 'm001' 회원이 제품 'P20100004'을 5개 구입했을 때 
+CART 테이블에 해당 자료를 삽입하는 쿼리를 작성하시오.
+
+(1) CART_NO 생성
+SELECT TO_CHAR('20050728' || MAX(SUBSTR(CART_NO, 9)) + 1)
+FROM cart;
+SELECT TO_CHAR(MAX(CART_NO)+1) 
+FROM cart;
+-- 위 둘은 같은 결과
+
+-- 순번 확인
+SELECT MAX(SUBSTR(CART_NO, 9)) FROM CART;
+
+(2) 시퀀스 생성
+CREATE SEQUENCE SQL_CART
+    START WITH 5;
+
+(3) 문제 요구 값 나열 후 시퀀스 이용
+=>
+INSERT INTO cart(cart_member, cart_no, cart_prod, cart_qty)
+VALUES('m001', TO_CHAR(SYSDATE, 'YYYYMMDD') ||
+      TRIM(TO_CHAR(SQL_CART.NEXTVAL, '00000')), 'P201000004', 5);
+
+
+
+2. SYNONYM 을 이용한 테이블 조회
+
+- HR계정의 REGIONS 테이블의 내용을 조회
+SELECT hr.region.reion_id AS 지역코드
+       hr.region.region_name AS 지역명
+  FROM hr.regions;
+  
+- 테이블 별칭을 사용한 경우
+SELECT a.reion_id AS 지역코드
+       a.region_name AS 지역명
+  FROM hr.regions a;
+
+- 동의어를 사용한 경우
+CREATE OR REPLACE SYNONYM reg FOR hr.regions;
+SELECT a.region_id as 지역코드,
+       a.region_name as 지역명
+  FROM reg a;
+
+
+
+

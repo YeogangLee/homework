@@ -1,0 +1,77 @@
+1. 컬럼 데이터로 인덱스 생성
+- PROD 테이블의 NAME 컬럼을 사용해 INDEX 를 만들고 싶다
+상품 테이블에서 상품명으로 NORMAL INDEX 를 구성하시오.
+
+CREATE INDEX idx_prod_name
+     ON prod(prod_name);
+
+
+
+2. 컬럼의 일부 데이터로 인덱스 생성 
+장바구니 테이블에서 장바구니 번호 중 3번째에서 6글자로 인덱스를 구성하시오.
+
+글자수 떼기 -> SUBSTR 사용 (START INDEX, LENGTH)
+=>
+CREATE INDEX idx_cart_no
+     ON cart(SUBSTR(cart_no, 3, 6));
+
+-- 함수를 이용해서 인덱스를 생성했으므로
+-- INDEX TYPE | FUNCTION-BASED NORMAL
+
+
+
+3. PL/SQL / 키보드로 2-9 사이의 값을 입력 받아 그 수에 해당하는 구구단을 작성하시오
+
+ACCEPT p_num PROMPT '수 입력(2~9) : '
+DECLARE
+    v_base NUMBER := TO_NUMBER('&p_num');
+    v_cnt NUMBER := 0;
+    v_res NUMBER := 0;
+BEGIN
+    LOOP
+        v_cnt := v_cnt+1;
+        EXIT WHEN v_cnt > 9;
+        v_res := v_base * v_cnt;
+        
+        DBMS_OUTPUT.PUT_LINE(v_base || '*' || v_cnt || '=' || v_res);
+    END LOOP;
+
+    EXCEPTION WHEN OTHERS THEN -- 예외 처리
+        DBMS_OUTPUT.PUT_LINE('예외 발생 : '|| SQLERRM);
+END;
+
+
+
+4. 일반 SQL / 구매 금액이 가장 많은 회원
+장바구니에서 2005년 5월 가장 많은 구매(구매 금액 기준)를 한 
+회원정보를 조회하시오.(회원번호, 회원명, 구매금액합)
+
+- 회원별 구매 금액 조회
+  SELECT A.CART_MEMBER AS 회원번호,
+         B.MEM_NAME AS 회원명,   -- 회원번호, 회원명 둘 중 하나는 쓰지 않아도 ㄱㅊ, 어차피 같은 말이기 때문 
+         SUM(PROD_PRICE * CART_QTY) AS 구매금액합 
+    FROM CART A, MEMBER B, PROD C
+   WHERE A.CART_MEMBER = B.MEM_ID
+     AND A.CART_PROD = C.PROD_ID -- 이거를 생략해도 결과는 같다.
+GROUP BY A.CART_MEMBER, B.MEM_NAME
+ORDER BY 3 DESC;                  
+
+- ROWNUM, 서브쿼리 이용, 목표 데이터만 조회
+=>
+SELECT D.MID AS 회원번호,
+       B.MEM_NAME AS 회원명,
+       D.AMT AS 구매금액합
+  FROM (SELECT A.CART_MEMBER AS MID,
+               SUM(C.PROD_PRICE * A.CART_QTY) AS AMT
+          FROM CART A, PROD C
+         WHERE A.CART_PROD = C.PROD_ID
+      GROUP BY A.CART_MEMBER
+      ORDER BY 2 DESC) D, MEMBER B
+WHERE D.MID = B.MEM_ID
+  AND ROWNUM = 1;
+
+
+
+
+
+
