@@ -1,0 +1,84 @@
+/* Controller */
+package controller;
+import service.ChargeService;
+
+public class Controller {
+	
+	public static void main(String[] args) {
+		new Controller().start();
+	}
+	
+	private ChargeService chargeService = ChargeService.getInstance();
+	
+	private void start() {
+		chargeService.chargeList();
+	}
+	
+}
+
+
+/* Dao */
+package dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import util.JDBCUtil;
+import util.ScanUtil;
+
+public class ChargeDao {
+
+	//싱글톤 패턴
+	private ChargeDao (){}
+	private static ChargeDao instance;
+	public static ChargeDao getInstance(){
+		if(instance == null){
+			instance = new ChargeDao();
+		}
+		return instance;
+	}
+	
+	private JDBCUtil jdbc = JDBCUtil.getInstance();
+	
+	public List<Map<String, Object>> selectBoardList(){
+		String sql = "SELECT (SELECT * FROM LINE) line_no, destation, arstation, price, vprice "
+				   + "FROM charge";
+		return jdbc.selectList(sql);
+	}
+}
+
+
+/* Service */
+package service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import util.ScanUtil;
+import util.View;
+import controller.Controller;
+import dao.ChargeDao;
+
+public class ChargeService {
+
+	//싱글톤 패턴
+	private ChargeService(){}
+	private static ChargeService instance;
+	public static ChargeService getInstance(){
+		if(instance == null){
+			instance = new ChargeService();
+		}
+		return instance;
+	}
+
+	private ChargeDao chargeDao = ChargeDao.getInstance();
+	
+	//원하는 메소드
+	public void chargeList(){ //나중에 void -> int 수정
+		//int 반환해서 view 쓸 거면 void -> int로 수정,
+		//원하는 메소드 작동 확인만하고 싶으면 void
+	}
+
+}
