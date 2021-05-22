@@ -1,0 +1,48 @@
+- ORA-00904:
+java.sql.SQLSyntaxErrorException: ORA-00904: "B"."WRITER": invalid identifier
+
+B.WRITER
+테이블 B(별칭)에 WRITER 컬럼이 없다
+
+
+- ORA-00911:
+java.sql.SQLSyntaxErrorException: ORA-00911: invalid character
+쿼리 내에 ; 이 포함되어 있는 경우
+
+ex.
+String sql = "INSERT INTO TB_JDBC_USER VALUES (?, ?, ?);";
+수정 =>
+String sql = "INSERT INTO TB_JDBC_USER VALUES (?, ?, ?)";
+
+
+- ORA-00923:
+java.sql.SQLSyntaxErrorException: ORA-00923: FROM keyword not found where expected
+쿼리 내 키워드 간 띄어쓰기 없이, 전부 붙어서 이어져 있는 경우
+
+ex.
+String sql = "SELECT A.BOARD_NO, A.TITLE, A.CONTENT, B.WRITER, A.WDATE"
+	+ "FROM TB_JDBC_BOARD A"
+	+ "LEFT OUTER JOIN TB_JDBC_USER B"
+	+ "ON A.WRITER = B.WRITER"
+	+ "ORDER BY A.BOARD_NO DESC";
+수정 =>
+String sql = "SELECT A.BOARD_NO, A.TITLE, A.CONTENT, B.WRITER, A.WDATE"
+	+ " FROM TB_JDBC_BOARD A"
+	+ " LEFT OUTER JOIN TB_JDBC_USER B"
+	+ " ON A.WRITER = B.WRITER"
+	+ " ORDER BY A.BOARD_NO DESC";
+
+
+Error occurred during initialization of VM
+Could not reserve enough space for object heap
+
+
+- ORA
+java 에서 java.math.BigDecimal cannot be cast to java.lang.Integer 에러 발생시
+
+oracle의 컬럼 타입이 number 형인경우 형변환시 에러가 발생할 수 있습니다.
+
+int testNum = Integer.parseInt(String.valueOf(dataMap.get("num_val1")));
+다음과 같이 String.valuOf 로 형변환을 하고 사용하면 된다.
+
+출처 : https://wwwnghks.tistory.com/94

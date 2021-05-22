@@ -1,0 +1,44 @@
+- JDBCUtil 클래스
+: 생성자에 private 키워드를 이용해서 생성자 접근은 해당 클래스 내에서만 가능하게 만든다.
+ 이용 -> 외부 클래스에서 해당 클래스를 최초로 사용하며 처음 생성하고 사용했던 JDBCUtil 클래스 객체 반환
+
+ 다른 클래스에서 JDBCUtil 클래스로 접근하는 방법 => public static JDBCUtil getInstance() 메서드 호출
+ public이라 누구나 접근이 가능하고, static이라 프로그램이 종료될 때까지 값이 사라지지 않는다.
+
+장점 : 사용할 때마다 객체생성 통해 이용하지 않아도 되고, 불필요한 객체 생성을 막을 수 있다.
+
+
+- 6개의 메서드 : 1행 선택, 여러행 선택, sql쿼리실행 후 영향받은 행 숫자
+Map<String, Object> selectOne(String sql)
+Map<String, Object> selectOne(String sql, List<Object> param)
+List<Map<String, Object>>selectList(String sql)
+List<Map<String, Object>>selectList(String sql, List<Object> param)
+int resultOfUpdate(String sql)
+int resultOfUpdate(String sql, List<Object> param)
+
+- List vs ArrayList
+List는 인터페이스, ArrayList는 클래스
+List는 도형, ArrayList는 정사각형
+Map vs HashMap 마찬가지
+인터페이스는 추상메서드를 가지고 부모의 역할만 한다 (j_collection.ArrayListClass)
+
+
+- Map<String, Object> 반환할 때, null값을 체크하기 위해
+초기값 : null값 대입 vs 객체 생성으로 초기화 new HashMap<>()
+>> null 값 대입이 좋다, 그래야 데이터가 없을 때 null 값을 출력
+
+
+- 향상된 for문, keySet( )으로 데이터 출력
+
+JDBCUtil jdbc = JDBCUtil.getInstance();
+//4.
+List<Map<String, Object>> list = jdbc.selectList(sql, param);
+
+for(int i = 0; i < list.size(); i++){
+	Map<String, Object> row = list.get(i); //List에 get() 사용시 Map 반환
+	for(String key : row.keySet()){ //향상된 for문
+		System.out.print(key + " : " + row.get(key) + "\t"); //Map에 get() 사용시 행 값 반환
+	}
+	System.out.println();
+}
+

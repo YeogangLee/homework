@@ -92,6 +92,10 @@ WHERE customer.cid = cycle.cid
   
 
 데이터 결합 join5]
+● erd 다이어그램을 참고하여 customer, cycle, product 테이블을 조인하여
+고객별 애음 제품, 애음요일, 개수, 제품명을 다음과 같은 결과가 나오도록
+쿼리를 작성해보세요(고객명이 brown, sally인 고객만 조회)
+
 -- ORACLE
 SELECT cu.cid, cnm, cy.pid, pnm, day, cnt
 FROM customer cu, cycle cy, product p

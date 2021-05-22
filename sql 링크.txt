@@ -1,0 +1,3 @@
+- Oracle SQL Developer 테이블 여러개 여는 방법
+: 도구 > 환경설정 > 데이터베이스: 객체 뷰어 > 체크박스 체크 - 객체 뷰어 창 자동 고정
+https://wakestand.tistory.com/388

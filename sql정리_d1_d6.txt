@@ -1,0 +1,107 @@
+d1
+/*
+01
+VIEW 객체
+- 보안성, QUERY 실행의 효율성, TABLE의 은닉성을 위해 사용
+
+- VIEW 생성
+CREATE VIEW V_뷰이름
+CREATE OR REPLACE VIEW V_MEMBER01
+AS 
+    SELECT mem_id AS 회원번호, 
+           mem_name AS 회원명, 
+           mem_job AS 직업, 
+           mem_mileage AS 마일리지
+    FROM member
+    WHERE mem_mileage >= 3000;
+
+- VIEW 삭제
+DROP VIEW 뷰이름;
+
+- 집으로 오라클 sql 파일 복사하는 방법(SQL export 기능, cmd창 이용)
+
+- CURSOR 커서 : 셀렉트 문 쿼리에 영향을 받은 행들의 집합
+  커서를 이용하면 여러 행에 접근이 가능하다.
+*/
+
+d2
+/*
+01
+- SEQUENCE 객체
+: 자동으로 증가되는 값을 반환할 수 있는 객체
+ 기본키로 설정할 적당한 컬럼이 존재하지 않는 경우,
+  자동으로 증가되는 컬럼의 속성으로 주로 사용됨
+
+- AUTO INCREMENT 컬럼 속성 vs SEQUENCE 객체
+: 객체는 테이블에 독립적이므로,
+여러 테이블에서 동시에 SEQUENCE 객체 이용 가능
+
+- 시퀀스가 사용되는 곳
+SELECT 문의 SELECT 절 (서브쿼리는 제외)
+INSERT 문의 SELECT 절 (서브쿼리), VALUES 절
+-- ㄴ 시퀀스 문제로 접했던 조건
+UPDATE 문의 SET 절
+
+- 시퀀스 사용이 제한되는 곳
+
+
+02
+SYNONYM 객체
+: 동의어를 의미, 긴 이름의 객체를 쉽게 사용하기 위한 용도로 주로 사용
+
+생성 방법
+: CREATE OR REPLACE SYNONYM 시너넘이름 FOR 객체명ex.테이블명;
+
+- 테이블 별칭은 해당 쿼리 안에서만 유효하지만,
+SYNONYM 동의어는 해당 데이터베이스를 사용하는 동안 계속 존재한다
+
+
+03
+INDEX 객체
+: 데이터 검색 효율을 증대 시키기 위한 도구
+  !주의! 별도의 추가공간이 필요하고 INDEX FILE 을 위한 PROCESS 가 요구됨
+
+생성 방법
+: CREATE INDEX 인덱스명 ON 테이블명(컬럼명1);
+
+- 인덱스의 종류
+UNIQUE		- 중복X, null 값을 가질 수 있다
+NON UNIQUE	- 중복 허용
+NORMAL INDEX 	- 기본 인덱스, 트리 구조로 구성
+*/
+
+d3
+/*
+01
+관계
+1. 식별자 관계 - 직선, 부모의 생존이 자식의 생존을 같이 결정 
+2. 비식별자 관계 - 점선, 한 쪽의 생존이 다른 한 쪽의 생존에 영향을 미치지 않는 관계 
+	            ex. 교수 - 대학생
+
+- 인덱스의 재구성
+ALTER INDEX 인덱스명 REBUILD;
+-- 초보가 다룰 일 잘 없음 ...
+
+
+02
+PL/SQL
+
+*/
+
+
+d4 /**/
+d5 /**/
+d6
+/*
+
+
+
+*/
+
+
+
+
+
+
+
+

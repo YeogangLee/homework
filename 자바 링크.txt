@@ -1,0 +1,16 @@
+
+
+
+
+
+2021/04/13 (화)
+JDBCTest.java
+
+- JAVA) List와 ArrayList 차이 : List vs ArrayList = 인터페이스 vs 클래스
+https://yoon-dailylife.tistory.com/7
+
+- 자바 자료형 정리 : int 같은 기본 자료형은 비객체(null값을 가질 수 없음)
+https://jdm.kr/blog/213
+
+
+

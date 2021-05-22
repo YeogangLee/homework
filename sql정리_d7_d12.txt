@@ -1,0 +1,39 @@
+d8
+/*
+- 문장단위 트리거 (잘 사용X)
+- 행단위 트리거
+   : CREATE 블럭에 FOR EACH ROW 키워드 사용
+
+- CART 테이블이 대표적 행단위 트리거 사용 예시
+
+- DECLARE : 트리거에서 변수 선언할 필요가 있을 때, 이렇게 DECLARE 블록 사용
+
+= SQL의 이벤트 3가지와 :NEW, :OLD 변수 -- 기존에 없던 자료 NEW, 기존에 있는 자료 OLD
+- INSERT : NEW
+- UPDATE : NEW, OLD -- 기존에 존재하는 데이터는 OLD, 새로 들어오는 데이터는 NEW
+- DELETE : OLD
+
+
+88 트리거 함수
+- 트리거를 유발시킨 DML을 구별하기 위해 사용
+------------------------------------------------------------------
+함수          의미
+------------------------------------------------------------------
+INSERTING    트리거의 EVENT 가 INSERT 이면 참(TRUE) 반환
+UPDATING    트리거의 EVENT 가 UPDATE 이면 참(TRUE) 반환
+DELETING     트리거의 EVENT 가 DELETE 이면 참(TRUE) 반환
+
+- 트리거 함수 사용 예시
+BEGIN
+    IF INSERTING THEN
+        V_QTY := :NEW.CART_QTY;
+        V_PROD := :NEW.CART_PROD;
+    ELSIF UPDATING THEN
+        V_QTY := :NEW.CART_QTY - :OLD.CART_QTY;   
+        V_PROD := :NEW.CART_PROD; -- PROD는 변동X
+    ELSE -- DELETING
+        V_QTY := -(:OLD.CART_QTY);
+        V_PROD := :OLD.CART_PROD;
+    END IF;
+...
+*/
