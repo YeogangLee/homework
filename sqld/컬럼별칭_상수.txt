@@ -1,0 +1,6 @@
+https://riptutorial.com/sql/example/6529/order-by-alias
+SQL - Order by Alias
+상수 컬럼 별칭
+
+컬럼 별칭: order by, where에서 사용 가능
+
